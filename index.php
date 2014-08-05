@@ -2,16 +2,15 @@
 
 <html>
 <head>
+    <script src="sign.js"></script>
     <title>Credit Cards Managment</title>
 </head>
 
-<body>
-    
+<body>   
     <?php
     
     // Add the database connection logic
     include "dbconnect.php";
-    //include "SignUtil/sign.js";
 
     // define("ENCRYPTION_KEY", "!@#$%^&*");
 
@@ -33,7 +32,19 @@
         return $digit1 . $digit2 . $digit3 . $digit4;
     }
 
-    
+    function isUserValid()
+    {
+        echo '<script type="text/javascript">'
+            ,'signText(sign);'
+            ,'</script>';
+
+        $result = $_GET['signed'];
+
+        if ($result == 'true')
+            return true;
+        return false;
+    }
+
     // Populates database table fields with INSERT command
     if (isset($_POST['enter'])) 
     {    
@@ -42,18 +53,33 @@
             
         if (!mysqli_query($connection,$sql))
         {
-            die('Error: ' . mysqli_error($connection));
+            if (isUserValid())
+            {
+                // Create a random pin code
+                $pincode = substr(md5(microtime()), rand(0,26), 4);
+                // Encrypt the pin code
+                $encrypted = encrypt($pincode, ENCRYPTION_KEY);
+
+                $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
+                        VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . $encrypted . "')";
+                    
+                if (!mysqli_query($connection,$sql))
+                {
+                    die('Error: ' . mysqli_error($connection));
+                }
+            }
         }  
     }
     
     // Delete listing by ID
     if (isset($_POST['deletebutton']))
     {
-        $delete = $_POST['delete'];
-        mysqli_query($connection,"DELETE FROM CreditCards WHERE CardNumber='$delete'");
+        if (isUserValid())
+        {
+            $delete = $_POST['delete'];
+            mysqli_query($connection,"DELETE FROM CreditCards WHERE CardNumber='$delete'");
+        }
     }
-    
-    /*mysqli_close($connection);*/
 
 ?>
     <!--Form fields for inserting a record-->
@@ -61,7 +87,7 @@
         Card Number:    <input type="text" name="cardnumber"><br>
         First Name:     <input type="text" name="firstname"><br>
         Last Name:      <input type="text" name="lastname"><br>
-        <input type="submit" name="enter">
+        <input type="submit" name="enter">        
     </form>
     
     <br>
@@ -111,9 +137,9 @@
 }
 
 ?>
-     <br>
+    <br>
    
-   <!--Button that calls on upadate.php and views it's contents-->
+    <!--Button that calls on upadate.php and views it's contents-->
     <form action="index.php" method="post">
     <input type="submit" value="Upate Record" name="updatebutton">
     </form>
@@ -128,10 +154,16 @@
     
     //updates listing in database by ID // processes update.php file
     
-     if (isset($_POST['updatelisting'])){
-        $update = $_POST['update'];
-    mysqli_query($connection,"UPDATE CreditCards SET CardNumber='$_POST[cardnumber]', UserFName='$_POST[firstname]', UserLName='$_POST[lastname]'
-    WHERE ID='$update'");
+    if (isset($_POST['updatelisting']))
+    {
+        if (isUserValid())
+        {
+            $update = $_POST['update'];
+            mysqli_query($connection,
+                "UPDATE CreditCards SET CardNumber='$_POST[cardnumber]',
+                UserFName='$_POST[firstname]', UserLName='$_POST[lastname]'
+                WHERE ID='$update'");
+        }
     ?>
     
     <!--Script reloads page so updated field can be viewed-->
