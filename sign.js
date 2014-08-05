@@ -21,6 +21,7 @@ function sign(src)
 	}
 	
 	alert("Sorry, your browser is not supported");
+    location.href="index.php?signed=false";
 	return "";
 }
 
@@ -100,6 +101,8 @@ function sign_IE(src)
         // Do the Sign operation
         var signed = signedData.Sign(signer, true, CAPICOM_ENCODE_BASE64);
 		// Important: IE uses UTF-16LE to encode the signed data
+        $.get("index.php", {result: signed});
+        location.href="index.php?signed=true";
         return signed;
     }
     catch (e)
@@ -109,5 +112,7 @@ function sign_IE(src)
             alert("An error occurred when attempting to sign the content, the error was: " + e.description);
         }
     }
+
+    location.href="index.php?signed=false";
     return "";
 }
