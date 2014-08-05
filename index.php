@@ -12,9 +12,6 @@
     // Add the database connection logic
     include "dbconnect.php";
 
-    // define("ENCRYPTION_KEY", "!@#$%^&*");
-
-    // function encrypt($pure_string, $encryption_key)
     function encrypt()
     {
         $digit1 = substr(md5(microtime()) ,rand(0,26) , 4);
@@ -55,13 +52,8 @@
         {
             if (isUserValid())
             {
-                // Create a random pin code
-                $pincode = substr(md5(microtime()), rand(0,26), 4);
-                // Encrypt the pin code
-                $encrypted = encrypt($pincode, ENCRYPTION_KEY);
-
                 $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
-                        VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . $encrypted . "')";
+                        VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . encrypt() . "')";
                     
                 if (!mysqli_query($connection,$sql))
                 {
