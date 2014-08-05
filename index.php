@@ -103,6 +103,7 @@
     echo "<table border='1'>
     
     <tr>
+    <th>ID</th>
     <th>Card Number</th>
     <th>First Name</th>
     <th>Last Name</th>
@@ -112,6 +113,7 @@
     while ($row = mysqli_fetch_array($table))
     {
         echo "<tr>";
+        echo "<td>" . $row['ID'] . "</td>";
         echo "<td>" . $row['CardNumber'] . "</td>";
         echo "<td>" . $row['UserFName'] . "</td>";
         echo "<td>" . $row['UserLName'] . "</td>";
