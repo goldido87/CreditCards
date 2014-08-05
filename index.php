@@ -13,28 +13,32 @@
     include "dbconnect.php";
     //include "SignUtil/sign.js";
 
-    define("ENCRYPTION_KEY", "!@#$%^&*");
+    // define("ENCRYPTION_KEY", "!@#$%^&*");
 
-    function encrypt($pure_string, $encryption_key) 
+    // function encrypt($pure_string, $encryption_key)
+    function encrypt()
     {
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH, $encryption_key, 
-            utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
-        return $encrypted_string;
+        $digit1 = substr(md5(microtime()) ,rand(0,26) , 4);
+        $digit2 = substr(md5(microtime()) ,rand(0,26) , 4);
+        $digit3 = substr(md5(microtime()) ,rand(0,26) , 4);
+        $digit4 = substr(md5(microtime()) ,rand(0,26) , 4);
+
+        $pin = strval(ord(strval($digit1)[0]) * ord(strval($digit1)[3]))[3] .
+               strval(ord(strval($digit2)[0]) * ord(strval($digit2)[3]))[3] .
+               strval(ord(strval($digit3)[0]) * ord(strval($digit3)[3]))[3] .
+               strval(ord(strval($digit4)[0]) * ord(strval($digit4)[3]))[3];
+
+        echo "<script type='text/javascript'>alert('Your ATM Code is: " . $pin . ", Please keep it!');</script>";
+        
+        return $digit1 . $digit2 . $digit3 . $digit4;
     }
 
     
     // Populates database table fields with INSERT command
     if (isset($_POST['enter'])) 
     {    
-        // Create a random pin code
-        $pincode = substr(md5(microtime()), rand(0,26), 4);
-        // Encrypt the pin code
-        $encrypted = encrypt($pincode, ENCRYPTION_KEY);
-
         $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
-                VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . $encrypted . "')";
+                VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . encrypt() . "')";
             
         if (!mysqli_query($connection,$sql))
         {
@@ -98,6 +102,7 @@
         echo "<td>" . $row['CardNumber'] . "</td>";
         echo "<td>" . $row['UserFName'] . "</td>";
         echo "<td>" . $row['UserLName'] . "</td>";
+        // echo "<td>" . $row['PinCode'] . "</td>";
         echo "<td>****</td>";
         echo "</tr>";
     }
