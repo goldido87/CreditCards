@@ -27,7 +27,7 @@ function getUser()
 		return getUser_IE();
 	}
 	
-	alert("Sorry, your browser is not supported");
+	alert("Sorry, your browser does not support smart cards authentication");
 	return "";
 }
 

@@ -13,7 +13,7 @@
     $sql = "CREATE DATABASE IF NOT EXISTS crud";
     if (mysqli_query($connection,$sql))    
     {
-        echo "Welcome to Credit Cards managment Program"; ?> <br><br> <?php
+        ?> <h2><u> <?php echo "Credit cards managment"; ?> </u></h2><br> <?php
     }
     else
     {
@@ -35,14 +35,7 @@
         PinCode VARCHAR(1000) NOT NULL,
         PRIMARY KEY (ID))";
     
-    if (mysqli_query($connection,$sql))
-    {
-        // Table created succesfully
-    }
-    else
-    {
-        // Error creating table   
-    }
+    mysqli_query($connection, $sql);
 
     // Create Users Table
     $sql = "CREATE TABLE IF NOT EXISTS Users(
@@ -51,7 +44,6 @@
         PRIMARY KEY (ID))";
     
     mysqli_query($connection,$sql)
-
 
     // Set admin user name
     /*$sql = "SELECT UserName 1 FROM users";

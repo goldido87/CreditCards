@@ -4,7 +4,7 @@
 <head>
     <script src="jquery-1.11.1.min.js"></script>
     <script src="sign.js"></script>
-    <title>Credit Cards Managment</title>
+    <title>Credit cards Managment</title>
 </head>
 
 <body>   
@@ -57,21 +57,25 @@
 
     <!--Form fields for inserting a record-->
     <form action="index.php" onsubmit="return isUserVerified()" method="post">
-        Card Number:    <input type="text" name="cardnumber"><br>
-        First Name:     <input type="text" name="firstname"><br>
-        Last Name:      <input type="text" name="lastname"><br>
-        <input type="submit" name="enter">        
+        <fieldset>
+        <legend><h3>Add a new card:</h3></legend>
+            Card Number:    <input type="text" name="cardnumber"><br>
+            First Name:     <input type="text" name="firstname"><br>
+            Last Name:      <input type="text" name="lastname"><br><br>
+            <input type="submit" name="enter" value="Add">   
+        </fieldset>     
     </form>
     
     <br>
     <br>
 
-    <!--Record deleted by entering ID-->
-    
+    <!--Delete card record -->
     <form action="index.php" onsubmit="return isUserVerified()" method="post">
-        <label for="id"><b>Delete Listing by card number: </b></label><br>
-        <input type="text" id="textInput" name="delete">
-        <input type="submit" name="deletebutton" value="Delete">
+        <fieldset>
+        <legend><h3>Delete a card:</h3></legend>
+            Card Number: <input type="text" id="textInput" name="delete"><br><br>
+            <input type="submit" name="deletebutton" value="Delete">
+        </fieldset>  
     </form>
      
     <br>
@@ -110,7 +114,7 @@
 }
 
 ?>
-    <br>
+<br>
     
 <?php
 
@@ -129,13 +133,11 @@
             UserFName='$_POST[firstname]', UserLName='$_POST[lastname]'
             WHERE ID='$update'";
         mysqli_query($connection, $sql);
-    
     ?>
     
     <?php
     }
     
-
 ?>
 
 <script>
