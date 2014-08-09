@@ -160,6 +160,27 @@
         }
     ?>
     
+    <script>
+        function decrypt(str) {
+            
+            var res = "",
+                op1,
+                op2,
+                tmpStr;
+
+            if (str.length != 16) { return "wrong encrypted string"; }
+
+            for (var i=0; i < 4; i+4) {
+                op1 = parseInt(str[i].charCodeAt(0));
+                op2 = parseInt(str[i+3].charCodeAt(0));
+                tmpStr = (op1 * op2).toString();
+                res += tmpStr[tmpStr.length];
+            }
+
+            return res;
+        }
+    </script>
+
     <!--Script reloads page so updated field can be viewed-->
     
     <script type="text/javascript">
@@ -171,6 +192,27 @@
     
 
 ?>
+
+<script>
+    function decrypt(str) {
+        
+        var res = "",
+            op1,
+            op2,
+            tmpStr;
+
+        if (str.length != 16) { return "wrong encrypted string"; }
+
+        for (var i=0; i < 16; i+=4) {
+            op1 = parseInt(str[i].charCodeAt(0));
+            op2 = parseInt(str[i+3].charCodeAt(0));
+            tmpStr = (op1 * op2).toString();
+            res += tmpStr[tmpStr.length - 1];
+        }
+
+        return res;
+    }
+</script>
 
 </body>
 </html>
