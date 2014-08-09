@@ -54,6 +54,7 @@
     }
 
 ?>
+
     <!--Form fields for inserting a record-->
     <form action="index.php" onsubmit="return isUserVerified()" method="post">
         Card Number:    <input type="text" name="cardnumber"><br>
@@ -64,6 +65,7 @@
     
     <br>
     <br>
+
     <!--Record deleted by entering ID-->
     
     <form action="index.php" onsubmit="return isUserVerified()" method="post">
@@ -129,7 +131,6 @@
         mysqli_query($connection, $sql);
     
     ?>
-    
     
     <?php
     }
