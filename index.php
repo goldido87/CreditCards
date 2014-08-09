@@ -2,6 +2,7 @@
 
 <html>
 <head>
+    <script src="jquery-1.11.1.min.js"></script>
     <script src="sign.js"></script>
     <title>Credit Cards Managment</title>
 </head>
@@ -29,53 +30,32 @@
         return $digit1 . $digit2 . $digit3 . $digit4;
     }
 
-    function isUserValid()
-    {
-        echo '<script type="text/javascript">'
-            ,'signText(sign);'
-            ,'</script>';
-
-        $result = $_GET['signed'];
-
-        if ($result == 'true')
-            return true;
-        return false;
-    }
-
     // Populates database table fields with INSERT command
     if (isset($_POST['enter'])) 
-    {    
-        $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
-                VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . encrypt() . "')";
-            
-        if (!mysqli_query($connection,$sql))
+    {   
+        if ($_POST['cardnumber'] != null)
         {
-            if (isUserValid())
-            {
-                $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
+            $sql = "INSERT INTO CreditCards (CardNumber, UserFName, UserLName, PinCode)
                         VALUES ('$_POST[cardnumber]','$_POST[firstname]','$_POST[lastname]','" . encrypt() . "')";
-                    
-                if (!mysqli_query($connection,$sql))
-                {
-                    die('Error: ' . mysqli_error($connection));
-                }
-            }
+
+            if (!mysqli_query($connection,$sql))
+            {
+                die('Error: ' . mysqli_error($connection));
+            } 
         }  
     }
-    
+
     // Delete listing by ID
     if (isset($_POST['deletebutton']))
     {
-        if (isUserValid())
-        {
-            $delete = $_POST['delete'];
-            mysqli_query($connection,"DELETE FROM CreditCards WHERE CardNumber='$delete'");
-        }
+        $delete = $_POST['delete'];
+        $sql = "DELETE FROM CreditCards WHERE CardNumber='$delete'";
+        mysqli_query($connection, $sql);
     }
 
 ?>
     <!--Form fields for inserting a record-->
-    <form action="index.php" method="post">
+    <form action="index.php" onsubmit="return isUserVerified()" method="post">
         Card Number:    <input type="text" name="cardnumber"><br>
         First Name:     <input type="text" name="firstname"><br>
         Last Name:      <input type="text" name="lastname"><br>
@@ -86,7 +66,7 @@
     <br>
     <!--Record deleted by entering ID-->
     
-    <form action="index.php" method="post">
+    <form action="index.php" onsubmit="return isUserVerified()" method="post">
         <label for="id"><b>Delete Listing by card number: </b></label><br>
         <input type="text" id="textInput" name="delete">
         <input type="submit" name="deletebutton" value="Delete">
@@ -120,8 +100,7 @@
         echo "<td>" . $row['CardNumber'] . "</td>";
         echo "<td>" . $row['UserFName'] . "</td>";
         echo "<td>" . $row['UserLName'] . "</td>";
-        // echo "<td>" . $row['PinCode'] . "</td>";
-        echo "<td>****</td>";
+        echo "<td>" . $row['PinCode'] . "</td>";
         echo "</tr>";
     }
     
@@ -130,11 +109,6 @@
 
 ?>
     <br>
-   
-    <!--Button that calls on upadate.php and views it's contents-->
-    <form action="index.php" method="post">
-    <input type="submit" value="Upate Record" name="updatebutton">
-    </form>
     
 <?php
 
@@ -148,21 +122,14 @@
     
     if (isset($_POST['updatelisting']))
     {
-        if (isUserValid())
-        {
-            $update = $_POST['update'];
-            mysqli_query($connection,
-                "UPDATE CreditCards SET CardNumber='$_POST[cardnumber]',
-                UserFName='$_POST[firstname]', UserLName='$_POST[lastname]'
-                WHERE ID='$update'");
-        }
+        $update = $_POST['update'];
+        $sql = "UPDATE CreditCards SET CardNumber='$_POST[cardnumber]',
+            UserFName='$_POST[firstname]', UserLName='$_POST[lastname]'
+            WHERE ID='$update'";
+        mysqli_query($connection, $sql);
+    
     ?>
     
-    <!--Script reloads page so updated field can be viewed-->
-    
-    <script type="text/javascript">
-        parent.window.location.href="index.php";
-    </script>
     
     <?php
     }

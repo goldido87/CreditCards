@@ -1,27 +1,33 @@
 /* Smart card signing utility */
 
-function signText(text) 
+function isUserVerified()
+{
+    var adminUser = 'CN=Token Signing Public Key';
+    var isVerified = (adminUser == getUser());
+    return isVerified;
+}
+
+/*function signText(text) 
 {
     if (window.event) 
     {
         window.event.cancelBubble = true;
 	}
     return sign(text);
-}
+}*/
 
-function sign(src) 
+function getUser() 
 {
-    if (window.crypto && window.crypto.signText)
+    /*if (window.crypto && window.crypto.signText)
     {
         return sign_NS(src);
-	}
+	}*/
 	if (isIE()) 
     {
-		return sign_IE(src);
+		return getUser_IE();
 	}
 	
 	alert("Sorry, your browser is not supported");
-    location.href="index.php?signed=false";
 	return "";
 }
 
@@ -61,7 +67,7 @@ function findCertificateByHash()
         var store = new ActiveXObject("CAPICOM.Store");
         // open the current users personal certificate store
         store.Open(CAPICOM_CURRENT_USER_STORE, "My", CAPICOM_STORE_OPEN_READ_ONLY);
-
+        //store.Open("My");
 		//var certificates = MyStore.Certificates.Select(); 
         // Show personal certificates which are installed for this user
         var certificates = store.Certificates.Select(
@@ -80,30 +86,30 @@ function findCertificateByHash()
 }
 
 /* Sign method for internet explorer support */
-function sign_IE(src) 
+function getUser_IE() 
 {
     try
     {
         // instantiate the CAPICOM objects
-        var signedData = new ActiveXObject("CAPICOM.SignedData");
-        var timeAttribute = new ActiveXObject("CAPICOM.Attribute");
+        //var signedData = new ActiveXObject("CAPICOM.SignedData");
+        //var timeAttribute = new ActiveXObject("CAPICOM.Attribute");
 
         // Set the data that we want to sign
-        signedData.Content = src;
+        //signedData.Content = src;
         var signer = findCertificateByHash();
 
         // Set the time in which we are applying the signature
-        var today = new Date();
-        timeAttribute.Name = CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME;
-        timeAttribute.Value = today.getVarDate();
-        signer.AuthenticatedAttributes.Add(timeAttribute);
+        //var today = new Date();
+        //timeAttribute.Name = CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME;
+        //timeAttribute.Value = today.getVarDate();
+        //signer.AuthenticatedAttributes.Add(timeAttribute);
 
         // Do the Sign operation
-        var signed = signedData.Sign(signer, true, CAPICOM_ENCODE_BASE64);
+        //var signed = signedData.Sign(signer, true, CAPICOM_ENCODE_BASE64);
 		// Important: IE uses UTF-16LE to encode the signed data
-        $.get("index.php", {result: signed});
-        location.href="index.php?signed=true";
-        return signed;
+
+        var userName = signer.Certificate.issuerName; 
+        return userName;
     }
     catch (e)
     {
@@ -113,6 +119,5 @@ function sign_IE(src)
         }
     }
 
-    location.href="index.php?signed=false";
     return "";
 }

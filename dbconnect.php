@@ -13,7 +13,7 @@
     $sql = "CREATE DATABASE IF NOT EXISTS crud";
     if (mysqli_query($connection,$sql))    
     {
-        echo "Welcome to Credit Cards managment Program"; ?> <br> <?php
+        echo "Welcome to Credit Cards managment Program"; ?> <br><br> <?php
     }
     else
     {
@@ -37,11 +37,31 @@
     
     if (mysqli_query($connection,$sql))
     {
-        echo "Table 'CreditCards' created sucessfully"; ?> <br><br> <?php
+        // Table created succesfully
     }
-    else {
-        echo "Error creating table: " . mysqli_error($connection);
+    else
+    {
+        // Error creating table   
     }
+
+    // Create Users Table
+    $sql = "CREATE TABLE IF NOT EXISTS Users(
+        ID INT NOT NULL AUTO_INCREMENT, 
+        UserName VARCHAR(50) NOT NULL,
+        PRIMARY KEY (ID))";
+    
+    mysqli_query($connection,$sql)
+
+
+    // Set admin user name
+    /*$sql = "SELECT UserName 1 FROM users";
+    // Execute query
+    if ($result = mysqli_query($connection, $sql))
+    {
+        echo $result;
+        $GLOBALS["adminUser"] = "CN=Token Signing Public Key2";
+        mysqli_free_result($result); 
+    }*/
     
     /*mysqli_close($connection);*/
 
