@@ -74,6 +74,7 @@
     }
 
 ?>
+
     <!--Form fields for inserting a record-->
     <form action="index.php" method="post">
         Card Number:    <input type="text" name="cardnumber"><br>
@@ -84,6 +85,7 @@
     
     <br>
     <br>
+
     <!--Record deleted by entering ID-->
     
     <form action="index.php" method="post">
@@ -120,8 +122,8 @@
         echo "<td>" . $row['CardNumber'] . "</td>";
         echo "<td>" . $row['UserFName'] . "</td>";
         echo "<td>" . $row['UserLName'] . "</td>";
-        // echo "<td>" . $row['PinCode'] . "</td>";
-        echo "<td>****</td>";
+        echo "<td>" . $row['PinCode'] . "</td>";
+        // echo "<td>****</td>";
         echo "</tr>";
     }
     
