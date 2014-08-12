@@ -10,6 +10,9 @@
 <body>   
     <?php
     
+    // Set admin user name
+    $admin = '01-300813672';
+
     // Add the database connection logic
     include "dbconnect.php";
 
@@ -42,7 +45,11 @@
             {
                 die('Error: ' . mysqli_error($connection));
             } 
-        }  
+        }
+        else
+        {
+            echo "<script type='text/javascript'>alert('Please enter a card number');</script>";
+        }
     }
 
     // Delete listing by ID
@@ -56,7 +63,7 @@
 ?>
 
     <!--Form fields for inserting a record-->
-    <form action="index.php" onsubmit="return isUserVerified()" method="post">
+    <form action="index.php" onsubmit="return isUserVerified('<?php echo $admin; ?>')" method="post">
         <fieldset>
         <legend><h3>Add a new card:</h3></legend>
             Card Number:    <input type="text" name="cardnumber"><br>
@@ -70,7 +77,7 @@
     <br>
 
     <!--Delete card record -->
-    <form action="index.php" onsubmit="return isUserVerified()" method="post">
+    <form action="index.php" onsubmit="return isUserVerified('<?php echo $admin; ?>')" method="post">
         <fieldset>
         <legend><h3>Delete a card:</h3></legend>
             Card Number: <input type="text" id="textInput" name="delete"><br><br>
